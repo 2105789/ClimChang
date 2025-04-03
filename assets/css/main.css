@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 150 15% 98%;  /* Subtle green-white background */
+    --foreground: 150 10% 15%;   /* Dark charcoal text */
+    --card: 150 10% 99%;        /* Slightly greener off-white for cards */
+    --card-foreground: 150 10% 15%;
+    --popover: 150 10% 99%;
+    --popover-foreground: 150 10% 15%;
+    --primary: 150 30% 40%;      /* Matcha green primary color */
+    --primary-foreground: 150 10% 98%;
+    --secondary: 40 10% 92%;    /* Light warm grey secondary color */
+    --secondary-foreground: 150 10% 20%;
+    --muted: 150 5% 94%;        /* Very light green-grey for muted elements */
+    --muted-foreground: 150 5% 40%;
+    --accent: 150 20% 92%;      /* Light matcha green for accents */
+    --accent-foreground: 150 20% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 150 10% 98%;
+    --border: 150 10% 90%;      /* Subtle green-grey border color */
+    --input: 150 10% 92%;
+    --ring: 150 30% 40%;
+    --radius: 0.25rem;          /* More subtle rounded corners */
+  }
+
+  .dark {
+    --background: 150 15% 10%;  /* Dark green-charcoal background */
+    --foreground: 150 10% 92%;  /* Off-white text */
+    --card: 150 10% 12%;        /* Slightly lighter green-charcoal for cards */
+    --card-foreground: 150 10% 92%;
+    --popover: 150 10% 12%;
+    --popover-foreground: 150 10% 92%;
+    --primary: 150 25% 45%;     /* Matcha green primary color */
+    --primary-foreground: 150 15% 10%;
+    --secondary: 40 10% 25%;    /* Warm dark grey secondary color */
+    --secondary-foreground: 150 10% 94%;
+    --muted: 150 10% 18%;       /* Dark green-grey for muted elements */
+    --muted-foreground: 150 10% 75%;
+    --accent: 150 15% 22%;      /* Dark matcha green for accents */
+    --accent-foreground: 150 10% 94%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 150 10% 92%;
+    --border: 150 15% 20%;      /* Dark green-grey border color */
+    --input: 150 10% 22%;
+    --ring: 150 25% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border border-opacity-50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight; /* Less bold for minimalist aesthetic */
+  }
+  h1 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+  h2 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+}
+
+.container {
+  @apply mx-auto px-4 max-w-6xl;
+}
+
+/* Card styling for a minimalist Japanese-inspired design */
+.card {
+  @apply bg-card rounded-sm border border-border/20 shadow-sm transition-all duration-300 hover:shadow-md;
+}
+
+/* Button styling */
+.btn {
+  @apply px-4 py-2 rounded-sm font-normal transition-colors duration-200;
+}
+.btn-primary {
+  @apply bg-primary-600 text-white hover:bg-primary-700;
+}
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+/* Japanese-inspired design elements */
+.jp-divider {
+  @apply h-px bg-primary-200 dark:bg-primary-800 my-8 mx-auto max-w-md;
+}
+
+.jp-container {
+  @apply max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8;
+} 
