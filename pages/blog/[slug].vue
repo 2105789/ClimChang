@@ -53,7 +53,7 @@
         <RelatedPosts :relatedPosts="relatedPosts" :loading="loadingRelated" />
       </div>
     </div>
-    <div v-else class="p-12 text-center rounded-lg border border-border">
+    <div v-else class="p-12 text-center rounded-md border border-border">
       <p class="text-muted-foreground">Post not found.</p>
     </div>
   </div>

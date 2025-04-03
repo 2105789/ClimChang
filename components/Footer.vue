@@ -1,10 +1,10 @@
 <template>
-  <footer class="bg-background py-12">
+  <footer class="bg-background-soft dark:bg-background py-12">
     <div class="jp-container">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-lg mb-5 flex items-center tracking-widest">
-            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1 rounded-sm mr-3 text-xs">CC</span>
+            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1 rounded-md mr-3 text-xs">CC</span>
             Climate Change Insights
           </h3>
           <p class="text-muted-foreground text-sm leading-relaxed">
@@ -54,9 +54,9 @@
               <input 
                 type="email" 
                 placeholder="Your email" 
-                class="flex-1 py-2 px-3 rounded-none border-y border-l border-primary-200 dark:border-primary-700 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 text-sm"
+                class="flex-1 py-2 px-3 rounded-l-md border-y border-l border-primary-200 dark:border-primary-700 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 text-sm"
               />
-              <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-none text-sm">
+              <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-r-md text-sm">
                 Subscribe
               </button>
             </div>

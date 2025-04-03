@@ -18,7 +18,7 @@
           <button 
             @click="selectedCategory = null" 
             :class="[
-              'px-3 py-1.5 text-sm transition-colors rounded-none border',
+              'px-3 py-1.5 text-sm transition-colors rounded-md border',
               !selectedCategory 
                 ? 'bg-primary-600 text-white border-primary-600' 
                 : 'border-primary-200 dark:border-primary-700 hover:border-primary-400 text-foreground'
@@ -31,7 +31,7 @@
             :key="category.id"
             @click="selectedCategory = category.id"
             :class="[
-              'px-3 py-1.5 text-sm transition-colors rounded-none border',
+              'px-3 py-1.5 text-sm transition-colors rounded-md border',
               selectedCategory === category.id
                 ? 'bg-primary-600 text-white border-primary-600' 
                 : 'border-primary-200 dark:border-primary-700 hover:border-primary-400 text-foreground'
@@ -62,7 +62,7 @@
       </div>
 
       <!-- No Results -->
-      <div v-else class="py-16 text-center border border-primary-100 dark:border-primary-800 bg-card">
+      <div v-else class="py-16 text-center border border-primary-100 dark:border-primary-800 bg-card rounded-md">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-muted-foreground mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>

@@ -25,7 +25,7 @@
           <div class="flex flex-wrap gap-2">
             <NuxtLink 
               to="/blog" 
-              class="px-3 py-1.5 text-sm transition-colors rounded-none border border-primary-200 dark:border-primary-700 hover:border-primary-400 text-foreground"
+              class="px-3 py-1.5 text-sm transition-colors rounded-md border border-primary-200 dark:border-primary-700 hover:border-primary-400 text-foreground"
             >
               All Posts
             </NuxtLink>
@@ -34,7 +34,7 @@
               :key="cat.id"
               :to="`/category/${cat.slug}`" 
               :class="[
-                'px-3 py-1.5 text-sm transition-colors rounded-none border',
+                'px-3 py-1.5 text-sm transition-colors rounded-md border',
                 cat.id === category.id
                   ? 'bg-primary-600 text-white border-primary-600' 
                   : 'border-primary-200 dark:border-primary-700 hover:border-primary-400 text-foreground'
@@ -65,7 +65,7 @@
         </div>
         
         <!-- No Posts Found -->
-        <div v-else class="py-16 text-center border border-primary-100 dark:border-primary-800 bg-card mb-12">
+        <div v-else class="py-16 text-center border border-primary-100 dark:border-primary-800 bg-card mb-12 rounded-md">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-muted-foreground mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -73,7 +73,7 @@
           <p class="text-muted-foreground">We're working on adding more content to this category soon!</p>
           
           <div class="mt-8 flex justify-center">
-            <NuxtLink to="/blog" class="px-4 py-2 border border-primary-200 dark:border-primary-700 hover:border-primary-400 transition-all">
+            <NuxtLink to="/blog" class="px-4 py-2 border border-primary-200 dark:border-primary-700 hover:border-primary-400 transition-all rounded-md">
               Explore all posts
             </NuxtLink>
           </div>
@@ -85,7 +85,7 @@
           >
             Show technical details
           </button>
-          <div v-if="showDebug" class="mt-6 p-4 bg-card border border-primary-100 dark:border-primary-800 rounded text-left text-xs mx-auto max-w-xl">
+          <div v-if="showDebug" class="mt-6 p-4 bg-card border border-primary-100 dark:border-primary-800 rounded-md text-left text-xs mx-auto max-w-xl">
             <p class="font-medium">Technical Details:</p>
             <p>Category ID: {{ category.id }}</p>
             <div v-if="debugInfo" class="mt-2">
@@ -101,7 +101,7 @@
         <div v-if="otherCategories.length" class="mb-16">
           <div class="jp-divider mb-12"></div>
           <h2 class="text-2xl font-medium text-primary-950 dark:text-primary-100 mb-8 flex items-center">
-            <span class="bg-primary-600 text-white p-1.5 mr-3 inline-block">
+            <span class="bg-primary-600 text-white p-1.5 mr-3 inline-block rounded-md">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
@@ -113,7 +113,7 @@
               v-for="cat in otherCategories" 
               :key="cat.id" 
               :to="`/category/${cat.slug}`"
-              class="bg-card p-6 border border-primary-100/80 dark:border-primary-800/30 hover:border-primary-400 dark:hover:border-primary-600 transition-all duration-300 group"
+              class="bg-card p-6 border border-primary-100/80 dark:border-primary-800/30 hover:border-primary-400 dark:hover:border-primary-600 transition-all duration-300 group rounded-md"
             >
               <h3 class="text-lg mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {{ cat.name }}
@@ -134,7 +134,7 @@
         <h2 class="text-2xl font-medium mb-3">Category not found</h2>
         <p class="text-muted-foreground">The category "{{ slug }}" does not exist.</p>
         <div class="mt-8">
-          <NuxtLink to="/blog" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-none">
+          <NuxtLink to="/blog" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md">
             Browse all blog posts
           </NuxtLink>
         </div>

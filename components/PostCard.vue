@@ -1,22 +1,24 @@
 <template>
   <article 
-    class="bg-card border border-primary-100/80 dark:border-primary-800/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+    class="bg-card border border-primary-100/80 dark:border-primary-800/50 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 rounded-md"
   >
-    <div class="relative aspect-video overflow-hidden">
-      <img 
-        :src="post.imageUrl" 
-        :alt="post.title" 
-        class="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-primary-950/30 to-transparent"></div>
-      <div class="absolute bottom-3 left-3">
-        <span 
-          class="inline-block bg-primary-600/90 px-2 py-1 text-xs text-white backdrop-blur-sm"
-        >
-          {{ category }}
-        </span>
+    <NuxtLink :to="`/blog/${post.slug}`" class="block">
+      <div class="relative aspect-video overflow-hidden">
+        <img 
+          :src="post.imageUrl" 
+          :alt="post.title" 
+          class="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-primary-950/30 to-transparent"></div>
+        <div class="absolute bottom-3 left-3">
+          <span 
+            class="inline-block bg-primary-600/90 px-2 py-1 text-xs text-white backdrop-blur-sm rounded-sm"
+          >
+            {{ category }}
+          </span>
+        </div>
       </div>
-    </div>
+    </NuxtLink>
     <div class="p-5">
       <div class="flex justify-end mb-2">
         <span class="text-xs text-muted-foreground">

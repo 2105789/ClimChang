@@ -5,7 +5,7 @@
         v-model="searchQuery"
         type="text"
         placeholder="Search posts..."
-        class="w-full py-2 pl-9 pr-3 border border-primary-200 dark:border-primary-700 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-400 transition-all text-sm"
+        class="w-full py-2 pl-9 pr-3 border border-primary-200 dark:border-primary-700 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-400 transition-all text-sm rounded-md"
         @focus="showResults = true"
         @keydown.esc="hideResults"
         @keydown.down.prevent="navigateResults('down')"
@@ -21,7 +21,7 @@
     
     <div
       v-if="showResults && filteredPosts.length > 0"
-      class="absolute z-20 w-full mt-1 overflow-hidden bg-card border border-primary-200 dark:border-primary-700 shadow-sm max-h-72 overflow-y-auto"
+      class="absolute z-20 w-full mt-1 overflow-hidden bg-card border border-primary-200 dark:border-primary-700 shadow-sm max-h-72 overflow-y-auto rounded-md"
     >
       <ul class="py-1">
         <li
@@ -36,7 +36,7 @@
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 mt-1">
-              <div class="w-6 h-6 bg-primary-600 flex items-center justify-center">
+              <div class="w-6 h-6 bg-primary-600 flex items-center justify-center rounded-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
@@ -53,7 +53,7 @@
     
     <div
       v-else-if="showResults && searchQuery && !filteredPosts.length"
-      class="absolute z-20 w-full mt-1 overflow-hidden bg-card border border-primary-200 dark:border-primary-700 shadow-sm"
+      class="absolute z-20 w-full mt-1 overflow-hidden bg-card border border-primary-200 dark:border-primary-700 shadow-sm rounded-md"
     >
       <div class="px-3 py-3 text-xs text-muted-foreground flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-primary-500 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

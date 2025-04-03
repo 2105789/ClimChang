@@ -16,14 +16,16 @@
         v-for="post in relatedPosts" :key="post.id" 
         class="card bg-card rounded-lg border border-border overflow-hidden shadow-card hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
       >
-        <div class="relative aspect-video group">
-          <img 
-            :src="post.imageUrl" 
-            :alt="post.title" 
-            class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </div>
+        <NuxtLink :to="`/blog/${post.slug}`" class="block">
+          <div class="relative aspect-video group">
+            <img 
+              :src="post.imageUrl" 
+              :alt="post.title" 
+              class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+        </NuxtLink>
         <div class="p-4">
           <h3 class="text-lg font-bold mb-2 line-clamp-2">
             <NuxtLink :to="`/blog/${post.slug}`" class="hover:text-primary-700 dark:hover:text-primary-400 transition-colors">

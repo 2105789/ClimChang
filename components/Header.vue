@@ -1,11 +1,11 @@
 <template>
-  <header class="border-b border-primary-100 dark:border-primary-800 bg-background py-4">
+  <header class="border-b border-primary-100 dark:border-primary-800 bg-background-soft dark:bg-background py-4 sticky top-0 z-50 shadow-sm">
     <div class="jp-container mx-auto">
       <div class="flex items-center justify-between">
         <!-- Logo Section -->
         <div class="flex items-center gap-6">
           <NuxtLink to="/" class="text-xl font-normal text-primary-800 dark:text-primary-400 tracking-wide flex items-center">
-            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1.5 rounded-sm mr-3 text-sm">CC</span>
+            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1.5 rounded-md mr-3 text-sm">CC</span>
             <span class="tracking-widest">ClimChang</span>
           </NuxtLink>
           <nav class="hidden md:block">
@@ -33,7 +33,7 @@
                   </button>
                   <div 
                     v-if="dropdownOpen"
-                    class="absolute left-0 mt-2 w-48 rounded-sm shadow-md py-1 bg-card border border-border z-10"
+                    class="absolute left-0 mt-2 w-48 rounded-md shadow-md py-1 bg-card border border-border z-10"
                   >
                     <NuxtLink 
                       v-for="category in moreCategories" 
@@ -59,7 +59,7 @@
           
           <button 
             @click="toggleColorMode" 
-            class="p-1.5 rounded-sm text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-800/40 transition-colors"
+            class="p-1.5 rounded-md text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-800/40 transition-colors"
             aria-label="Toggle dark mode"
           >
             <div v-if="colorMode === 'dark'" class="w-5 h-5">
@@ -76,7 +76,7 @@
           
           <button 
             @click="mobileMenuOpen = !mobileMenuOpen" 
-            class="md:hidden p-1.5 rounded-sm text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-800/40 transition-colors"
+            class="md:hidden p-1.5 rounded-md text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-800/40 transition-colors"
             aria-label="Toggle mobile menu"
           >
             <div class="w-5 h-5">
