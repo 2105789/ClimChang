@@ -1,5 +1,5 @@
 <template>
-  <header class="border-b border-primary-100 dark:border-primary-800 bg-background-soft dark:bg-background py-4 sticky top-0 z-50 shadow-sm">
+  <header class="border-b border-primary-100 dark:border-primary-800 bg-white dark:bg-background py-4 sticky top-0 z-50 shadow-sm">
     <div class="jp-container mx-auto">
       <div class="flex items-center justify-between">
         <!-- Logo Section -->

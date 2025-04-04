@@ -50,16 +50,29 @@
           </div>
           <div class="mt-6">
             <h4 class="text-sm mb-3">Subscribe to our newsletter</h4>
-            <div class="flex">
+            <form @submit.prevent="handleSubmit" class="flex">
               <input 
+                v-model="email"
                 type="email" 
                 placeholder="Your email" 
                 class="flex-1 py-2 px-3 rounded-l-md border-y border-l border-primary-200 dark:border-primary-700 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary-500 text-sm"
+                :disabled="isSubscribing || isAlreadySubscribed"
+                :class="{ 'border-red-400 focus:ring-red-400': subscriptionError }"
               />
-              <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-r-md text-sm">
-                Subscribe
+              <button 
+                type="submit" 
+                class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-r-md text-sm flex items-center justify-center min-w-[100px]"
+                :disabled="isSubscribing || isAlreadySubscribed"
+              >
+                <svg v-if="isSubscribing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ buttonText }}
               </button>
-            </div>
+            </form>
+            <p v-if="subscriptionError" class="text-red-500 text-sm mt-1">{{ subscriptionError }}</p>
+            <p v-if="subscriptionSuccess" class="text-green-500 text-sm mt-1">Thank you for subscribing!</p>
           </div>
         </div>
       </div>
@@ -75,11 +88,35 @@ import { ref, onMounted, computed } from 'vue';
 
 const categories = ref([]);
 const { getCategories } = useFirestore();
+const email = ref('');
+
+// Import newsletter composable
+const { 
+  isSubscribing, 
+  subscriptionError, 
+  subscriptionSuccess, 
+  isAlreadySubscribed, 
+  subscribeToNewsletter 
+} = useNewsletter();
 
 // Only show first 5 categories in footer
 const displayCategories = computed(() => {
   return categories.value.slice(0, 5);
 });
+
+// Dynamic button text based on subscription state
+const buttonText = computed(() => {
+  if (isAlreadySubscribed.value) return 'Subscribed';
+  if (isSubscribing.value) return 'Subscribing...';
+  return 'Subscribe';
+});
+
+// Handle form submission
+const handleSubmit = async () => {
+  if (!isAlreadySubscribed.value) {
+    await subscribeToNewsletter(email.value);
+  }
+};
 
 onMounted(async () => {
   categories.value = await getCategories();

@@ -2,9 +2,12 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <NewsletterPopup />
 </template>
 
 <script setup>
+import NewsletterPopup from '~/components/NewsletterPopup.vue';
+
 // Set page metadata
 useHead({
   title: 'Climate Change Insights - Climate Science & Solutions',

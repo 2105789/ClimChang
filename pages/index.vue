@@ -1,33 +1,33 @@
 <template>
   <div>
     <!-- Hero section - Japanese-inspired minimalist design -->
-    <section class="py-20 mb-16">
+    <section class="py-10 mb-10">
       <div class="jp-container">
         <div class="max-w-2xl mx-auto">
-          <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-primary-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="text-center mb-4">
+            <div class="w-12 h-12 bg-primary-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 class="text-4xl md:text-5xl font-medium mb-6 text-primary-950 dark:text-primary-50 tracking-wider">
+            <h1 class="text-3xl md:text-4xl font-medium mb-3 text-primary-950 dark:text-primary-50 tracking-wider">
               Climate <span class="text-primary-600 dark:text-primary-400">Change</span>
             </h1>
-            <div class="jp-divider w-24 my-5"></div>
-            <p class="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl mx-auto">
-              Exploring the science, impacts, and solutions to our planet's most pressing challenge.
+            <div class="jp-divider w-16 my-3"></div>
+            <p class="text-base text-muted-foreground mb-5 leading-relaxed max-w-xl mx-auto">
+              Your trusted resource for climate change insights and discussions. Our blog features AI-curated content on environmental science, impact assessment, and sustainable solutions to address our planet's most pressing challenges.
             </p>
           </div>
-          <div class="flex items-center justify-center gap-6 flex-wrap">
+          <div class="flex items-center justify-center gap-4 flex-wrap">
             <NuxtLink 
               to="/category/science-research" 
-              class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white transition-colors rounded-md"
+              class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white transition-colors rounded-md"
             >
               Research
             </NuxtLink>
             <NuxtLink 
               to="/category/sustainability-solutions" 
-              class="px-6 py-2.5 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/40 border border-primary-200 dark:border-primary-700 text-primary-950 dark:text-primary-200 transition-colors rounded-md"
+              class="px-5 py-2 bg-transparent hover:bg-primary-50 dark:hover:bg-primary-900/40 border border-primary-200 dark:border-primary-700 text-primary-950 dark:text-primary-200 transition-colors rounded-md"
             >
               Solutions
             </NuxtLink>
