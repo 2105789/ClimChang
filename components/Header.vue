@@ -21,6 +21,11 @@
                 </NuxtLink>
               </li>
               <li>
+                <NuxtLink to="/sources" class="text-foreground hover:text-primary-700 dark:hover:text-primary-400 transition-colors">
+                  Sources
+                </NuxtLink>
+              </li>
+              <li>
                 <div class="relative dropdown">
                   <button 
                     @click="toggleDropdown" 
@@ -107,6 +112,11 @@
           <li>
             <NuxtLink to="/blog" class="block py-2 text-foreground hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Blog
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/sources" class="block py-2 text-foreground hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+              Sources
             </NuxtLink>
           </li>
           <li v-for="category in categories" :key="category.id">
