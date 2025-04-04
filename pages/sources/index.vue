@@ -1,14 +1,17 @@
 <template>
+  
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-      <header class="mb-10">
-        <h1 class="text-3xl md:text-4xl font-bold mb-4">Latest Updates from Climate News Sources</h1>
-        <p class="text-muted-foreground max-w-3xl">
-          Stay informed with the latest climate news and updates from various trusted sources around the web.
-          Each source shows their 6 most recent articles.
+      <!-- Sources Header -->
+      <div class="mb-12 max-w-3xl mx-auto text-center">
+        <h1 class="text-3xl md:text-4xl font-medium mb-5 text-primary-950 dark:text-primary-50 tracking-wider">
+          Climate Change <span class="text-primary-600 dark:text-primary-400">Sources</span>
+        </h1>
+        <div class="jp-divider w-24 my-5 mx-auto"></div>
+        <p class="text-muted-foreground md:text-lg">
+          Latest Updates from Climate News Sources
         </p>
-      </header>
-      
+      </div>
+    <div class="max-w-7xl mx-auto">
       <div v-if="loading" class="flex justify-center items-center py-16">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
