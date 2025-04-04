@@ -7,11 +7,18 @@
         <NuxtLink :to="`/sources/${article.source_domain}`" class="block flex-shrink-0">
           <div class="relative aspect-video overflow-hidden">
             <img
+              v-if="article.image_url"
               :src="article.image_url"
               :alt="article.title"
               class="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
               loading="lazy"
+              @error="onImageError"
             />
+            <div v-else class="w-full h-full bg-primary-100 dark:bg-primary-800/50 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary-300 dark:text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
             <div class="absolute inset-0 bg-gradient-to-t from-primary-950/30 to-transparent"></div>
             <div class="absolute bottom-3 left-3">
               <span
@@ -40,7 +47,7 @@
   
         <h3 class="text-lg font-medium mb-2 line-clamp-2 tracking-tight">
           <a :href="article.article_url" target="_blank" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            {{ article.title }}
+            {{ article.title || 'Untitled Article' }}
           </a>
         </h3>
   
@@ -69,7 +76,7 @@
   </template>
   
   <script setup>
-  import { computed } from 'vue'; // <-- Import computed
+  import { computed, ref } from 'vue'; // Added ref for image error handling
   
   const props = defineProps({
     article: {
@@ -81,11 +88,19 @@
   // Define the specific SVG prefix to check against
   const svgDataUrlPrefix = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'";
   
+  // Track image loading errors
+  const imageError = ref(false);
+  
+  // Handle image loading errors
+  const onImageError = () => {
+    imageError.value = true;
+  };
+  
   // Computed property to determine if a valid, non-SVG data URL image should be shown
   const showImage = computed(() => {
     const imageUrl = props.article.image_url;
-    // Return true only if imageUrl exists AND it does NOT start with the specific SVG prefix
-    return !!imageUrl && !imageUrl.startsWith(svgDataUrlPrefix);
+    // Return false if there's an error or if the image URL doesn't exist or is an SVG
+    return !imageError.value && !!imageUrl && !imageUrl.startsWith(svgDataUrlPrefix);
   });
   
   const formatDomain = (domain) => {

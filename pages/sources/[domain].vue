@@ -26,27 +26,39 @@
         </header>
       </div>
       
-      <div v-if="loading" class="flex justify-center items-center py-16">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div v-if="loading" class="py-8">
+        <!-- Loading skeleton placeholders -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ArticleSkeleton v-for="i in 6" :key="`skeleton-${i}`" />
+        </div>
       </div>
       
       <div v-else>
         <div v-if="articles.length > 0">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="(article, index) in visibleArticles" :key="article.id" class="h-full">
+            <div 
+              v-for="(article, index) in visibleArticles" 
+              :key="article.id" 
+              class="h-full"
+              v-intersection="index === visibleArticles.length - 3 ? { handler: onScrollNearEnd, options: { rootMargin: '300px' } } : null"
+            >
               <ClientOnly>
                 <ArticleCard :article="article" />
               </ClientOnly>
             </div>
           </div>
           
-          <div v-if="hasMoreArticles" class="mt-10 mb-10 text-center py-4">
+          <div v-if="hasMoreArticles && !loadingMore" class="mt-10 mb-10 text-center py-4">
             <button 
               @click="loadMoreArticles" 
               class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
             >
               Load More Articles
             </button>
+          </div>
+          
+          <div v-else-if="loadingMore" class="mt-10 mb-10 flex justify-center py-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
           </div>
         </div>
         
@@ -71,6 +83,7 @@ const domain = ref(route.params.domain);
 const sourceUrl = ref('');
 const articles = ref([]);
 const loading = ref(true);
+const loadingMore = ref(false);
 
 const { fetchArticlesBySource, clearCache } = useArticles();
 
@@ -79,7 +92,31 @@ definePageMeta({
   layout: 'default'
 });
 
-// For pagination
+// Create a v-intersection directive to handle infinite scrolling
+const vIntersection = {
+  mounted(el, binding) {
+    // Skip if no binding value (null check for conditional v-intersection)
+    if (!binding.value) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          binding.value.handler();
+        }
+      });
+    }, binding.value.options || {});
+    
+    observer.observe(el);
+    el._observer = observer;
+  },
+  unmounted(el) {
+    if (el._observer) {
+      el._observer.disconnect();
+    }
+  }
+};
+
+// For pagination (client-side pagination to avoid additional Firestore reads)
 const articlesPerPage = 12;
 const currentPage = ref(1);
 const visibleArticles = computed(() => {
@@ -91,11 +128,26 @@ const hasMoreArticles = computed(() => {
 });
 
 const loadMoreArticles = () => {
-  currentPage.value++;
+  if (loadingMore.value) return;
+  
+  loadingMore.value = true;
+  setTimeout(() => {
+    currentPage.value++;
+    loadingMore.value = false;
+  }, 500); // Small delay for better UX
+};
+
+// Auto-load more articles when user scrolls near the end
+const onScrollNearEnd = () => {
+  if (hasMoreArticles.value && !loadingMore.value) {
+    loadMoreArticles();
+  }
 };
 
 const refreshData = async () => {
   loading.value = true;
+  currentPage.value = 1;
+  
   try {
     clearCache();
     await fetchData();
@@ -108,47 +160,10 @@ const refreshData = async () => {
 
 const fetchData = async () => {
   try {
-    // Fetch articles which will be sorted by the useArticles composable
-    let fetchedArticles = await fetchArticlesBySource(domain.value);
+    // Fetch articles using the optimized approach that utilizes caching
+    const fetchedArticles = await fetchArticlesBySource(domain.value);
     
-    // Double-check sorting to ensure newest articles appear first
-    // This is a safety measure in case the composable sorting isn't working
-    fetchedArticles.sort((a, b) => {
-      // Helper function to get a comparable date value
-      const getDateValue = (article) => {
-        // Try publication_date first (most reliable for actual publish date)
-        if (article.publication_date) {
-          return new Date(article.publication_date).getTime();
-        }
-        
-        // Then try timestamp
-        if (article.timestamp) {
-          if (article.timestamp.seconds) {
-            return article.timestamp.seconds * 1000;
-          }
-          return new Date(article.timestamp).getTime();
-        }
-        
-        // Then try scraped_at
-        if (article.scraped_at) {
-          if (article.scraped_at.seconds) {
-            return article.scraped_at.seconds * 1000;
-          }
-          return new Date(article.scraped_at).getTime();
-        }
-        
-        // Fallback to publication_date_raw
-        if (article.publication_date_raw) {
-          return new Date(article.publication_date_raw).getTime();
-        }
-        
-        return 0;
-      };
-      
-      // Sort newest first
-      return getDateValue(b) - getDateValue(a);
-    });
-    
+    // Articles are already sorted by the useArticles composable - no need to sort again
     articles.value = fetchedArticles;
     
     // Set the source URL from the first article if available
