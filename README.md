@@ -13,8 +13,7 @@ A minimalist, modern blog application built with Nuxt 3, Tailwind CSS, and Fireb
 - 🔥 Firebase integration (Firestore, Auth, Storage)
 
 ## Screenshots
-
-(Add screenshots here once the application is deployed)
+![Homepage](https://github.com/2105789/ClimChang/blob/master/plugins/screenshots/home.png?raw=true)
 
 ## Tech Stack
 
