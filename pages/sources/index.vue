@@ -10,6 +10,72 @@
           Latest Updates from Climate News Sources
         </p>
       </div>
+      
+      <!-- Website Filter Section -->
+      <div class="mb-10 max-w-7xl mx-auto">
+        <div class="flex flex-col space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium">
+              Filter Sources
+              <span v-if="selectedDomains.length > 0" class="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
+                {{ selectedDomains.length }} selected
+              </span>
+            </h3>
+            <button 
+              @click="clearAllFilters" 
+              class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 transition-colors"
+              v-if="selectedDomains.length > 0"
+            >
+              Clear all filters
+            </button>
+          </div>
+          
+          <!-- Search box for domains -->
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              v-model="domainSearch" 
+              placeholder="Search sources..." 
+              class="w-full p-2 pl-10 text-sm border border-gray-200 dark:border-gray-700 rounded-md bg-background focus:ring-primary-500 focus:border-primary-500"
+            />
+          </div>
+          
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-if="selectedDomains.length === 0"
+              class="px-3 py-1 text-sm bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 rounded-full border border-primary-200 dark:border-primary-700"
+              disabled
+            >
+              All sources ({{ allDomains.length }})
+            </button>
+            
+            <transition-group name="filter-chip">
+              <div v-for="domain in filteredDomainBubbles" :key="domain" class="inline-flex">
+                <button 
+                  @click="toggleDomainFilter(domain)"
+                  class="px-3 py-1 text-sm rounded-full transition-colors flex items-center gap-2"
+                  :class="isDomainSelected(domain) 
+                    ? 'bg-primary-600 dark:bg-primary-700 text-white border border-primary-600 dark:border-primary-700' 
+                    : 'bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 border border-primary-200 dark:border-primary-700 hover:bg-primary-100 dark:hover:bg-primary-800/50'"
+                >
+                  {{ formatDomain(domain) }}
+                  <span v-if="isDomainSelected(domain)" class="inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </transition-group>
+          </div>
+        </div>
+      </div>
+      
     <div class="max-w-7xl mx-auto">
       <div v-if="initialLoading" class="py-8">
         <!-- Initial loading skeletons for a better user experience -->
@@ -54,6 +120,25 @@
       </div>
       
       <div v-else>
+        <!-- No domains match filter message -->
+        <div v-if="Object.keys(visibleDomains).length === 0 && !initialLoading && !error" class="text-center py-16">
+          <div class="mx-auto w-16 h-16 mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium mb-2">No matching sources</h3>
+          <p class="text-muted-foreground mb-6">
+            {{ domainSearch ? 'No sources match your search criteria.' : 'No sources match your selected filters.' }}
+          </p>
+          <button
+            @click="clearAllFilters"
+            class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
+          >
+            Clear All Filters
+          </button>
+        </div>
+        
         <div 
           v-for="(articles, domain) in visibleDomains" 
           :key="domain" 
@@ -91,24 +176,6 @@
               </div>
             </template>
           </div>
-        </div>
-        
-        <div v-if="hasMoreDomains" class="mb-10 text-center py-4">
-          <button 
-            @click="loadMoreDomains" 
-            class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
-            :disabled="loadingMoreDomains"
-            :class="{'opacity-70 cursor-not-allowed': loadingMoreDomains}"
-          >
-            <span v-if="loadingMoreDomains" class="inline-flex items-center">
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading...
-            </span>
-            <span v-else>Load More Sources</span>
-          </button>
         </div>
         
         <div v-if="Object.keys(articlesBySource).length === 0" class="py-16 text-center">
@@ -152,7 +219,47 @@ const loading = ref(false); // Used for subsequent loading states
 const error = ref(null);
 const debugInfo = ref(null);
 const collectionInfo = ref(null);
-const loadingMoreDomains = ref(false);
+
+// For filtering domains
+const selectedDomains = ref([]);
+const domainSearch = ref('');
+
+const toggleDomainFilter = (domain) => {
+  const index = selectedDomains.value.indexOf(domain);
+  if (index === -1) {
+    selectedDomains.value.push(domain);
+  } else {
+    selectedDomains.value.splice(index, 1);
+  }
+};
+
+const isDomainSelected = (domain) => {
+  return selectedDomains.value.includes(domain);
+};
+
+const clearAllFilters = () => {
+  selectedDomains.value = [];
+  domainSearch.value = '';
+};
+
+// Filter domain bubbles based on search
+const filteredDomainBubbles = computed(() => {
+  if (!domainSearch.value.trim()) {
+    return allDomains.value;
+  }
+  
+  const searchTerm = domainSearch.value.toLowerCase();
+  return allDomains.value.filter(domain => {
+    // Check if the domain matches the search term
+    return domain.toLowerCase().includes(searchTerm) || 
+           formatDomain(domain).toLowerCase().includes(searchTerm);
+  });
+});
+
+// For handling empty results
+const hasFilteredResults = computed(() => {
+  return Object.keys(visibleDomains.value).length > 0;
+});
 
 // For lazy loading articles by domain
 const domainLoading = ref({});
@@ -179,9 +286,8 @@ const vIntersection = {
   }
 };
 
-// For pagination of domains
-const domainsPerPage = 4;
-const currentPage = ref(1);
+// Number of articles to show per domain
+const articlesPerDomain = 6;
 const allDomains = ref([]);
 
 // Reuse getTimeValue helper function to ensure consistent sorting
@@ -212,12 +318,18 @@ const getTimeValue = (article) => {
 };
 
 const visibleDomains = computed(() => {
-  // First, sort domains by the most recent article in each domain
-  const domainsByRecency = [...allDomains.value].sort((a, b) => {
+  // Filter domains first if any are selected
+  let filteredDomains = [...allDomains.value];
+  if (selectedDomains.value.length > 0) {
+    filteredDomains = filteredDomains.filter(domain => selectedDomains.value.includes(domain));
+  }
+  
+  // Sort domains by the most recent article in each domain
+  const domainsByRecency = filteredDomains.sort((a, b) => {
     const articlesA = articlesBySource.value[a] || [];
     const articlesB = articlesBySource.value[b] || [];
     
-    // Get the most recent article from each domain (they should already be sorted)
+    // Get the most recent article from each domain
     const mostRecentA = articlesA.length > 0 ? articlesA[0] : null;
     const mostRecentB = articlesB.length > 0 ? articlesB[0] : null;
     
@@ -225,17 +337,22 @@ const visibleDomains = computed(() => {
     if (!mostRecentA) return 1;
     if (!mostRecentB) return -1;
     
-    // Sort by most recent article
-    return getTimeValue(mostRecentB) - getTimeValue(mostRecentA);
+    // Sort by most recent article (newest first)
+    const timeA = getTimeValue(mostRecentA);
+    const timeB = getTimeValue(mostRecentB);
+    return timeB - timeA;
   });
   
-  // Then take a slice based on the current page
-  const domains = domainsByRecency.slice(0, currentPage.value * domainsPerPage);
   const result = {};
   
-  domains.forEach(domain => {
+  domainsByRecency.forEach(domain => {
     if (articlesBySource.value[domain]) {
-      result[domain] = articlesBySource.value[domain];
+      // Ensure articles within each domain are sorted properly (newest first)
+      const sortedArticles = [...articlesBySource.value[domain]].sort((a, b) => {
+        return getTimeValue(b) - getTimeValue(a);
+      });
+      // Limit to the latest 6 articles per domain
+      result[domain] = sortedArticles.slice(0, articlesPerDomain);
     } else {
       // Initialize with empty array if domain exists but articles aren't loaded yet
       result[domain] = [];
@@ -244,27 +361,6 @@ const visibleDomains = computed(() => {
   
   return result;
 });
-
-const hasMoreDomains = computed(() => {
-  return allDomains.value.length > currentPage.value * domainsPerPage;
-});
-
-const loadMoreDomains = async () => {
-  if (loadingMoreDomains.value) return;
-  
-  loadingMoreDomains.value = true;
-  currentPage.value++;
-  
-  // Allow state to update and UI to show loading
-  await nextTick();
-  
-  try {
-    // Load the newly visible domains
-    await loadVisibleDomainsData();
-  } finally {
-    loadingMoreDomains.value = false;
-  }
-};
 
 // Handler for intersection observer - load domain data when section becomes visible
 const onDomainVisible = async (el) => {
@@ -284,10 +380,15 @@ const onDomainVisible = async (el) => {
       // Fetch articles for this specific domain
       const domainArticles = await fetchArticlesBySource(domain);
       
+      // Sort articles to ensure newest is first
+      const sortedArticles = [...domainArticles].sort((a, b) => {
+        return getTimeValue(b) - getTimeValue(a);
+      });
+      
       // Update the articlesBySource with the new data
       articlesBySource.value = {
         ...articlesBySource.value,
-        [domain]: domainArticles
+        [domain]: sortedArticles
       };
     }
     
@@ -320,10 +421,15 @@ const loadVisibleDomainsData = async () => {
         try {
           const domainArticles = await fetchArticlesBySource(domain);
           
-          // Update the articlesBySource with the new data
+          // Sort articles to ensure newest is first
+          const sortedArticles = [...domainArticles].sort((a, b) => {
+            return getTimeValue(b) - getTimeValue(a);
+          });
+          
+          // Update the articlesBySource with the new data (limited to articlesPerDomain)
           articlesBySource.value = {
             ...articlesBySource.value,
-            [domain]: domainArticles
+            [domain]: sortedArticles
           };
           
           // Mark as loaded
@@ -376,42 +482,45 @@ const fetchData = async () => {
       }
     }
     
-    // Get all available domains first (optimized to use cache)
-    // This allows us to display the UI framework without loading all article data
-    const domains = await getAvailableDomains();
-    allDomains.value = domains || [];
+    // Fetch all articles by source, limited to articlesPerDomain per source
+    console.log(`Fetching up to ${articlesPerDomain} latest articles per source`);
+    const allArticlesBySource = await fetchLatestArticles(articlesPerDomain);
     
-    if (allDomains.value.length === 0) {
-      // If no domains are available, try to get them from articles
-      // This now uses a single optimized query with caching
-      const allArticlesBySource = await fetchLatestArticles(6);
-      articlesBySource.value = allArticlesBySource;
-      allDomains.value = Object.keys(allArticlesBySource);
-      
-      // Mark all domains as loaded since we loaded all at once
-      allDomains.value.forEach(domain => {
-        loadedDomains.value.add(domain);
-      });
-    } else {
-      // Initially, we just set up the domain structure without loading all articles
-      // This provides a faster initial render and reduces Firestore reads
-      const initialArticlesBySource = {};
-      
-      // Initialize articlesBySource with empty arrays for visible domains
-      const visibleDomainsList = allDomains.value.slice(0, domainsPerPage);
-      visibleDomainsList.forEach(domain => {
-        initialArticlesBySource[domain] = [];
-      });
-      
-      articlesBySource.value = initialArticlesBySource;
-      
-      // After initial render, load data for visible domains
-      nextTick(() => {
-        loadVisibleDomainsData();
-      });
+    // Make sure articles are sorted by date (newest first) in each domain
+    const sortedArticlesBySource = {};
+    for (const [domain, articles] of Object.entries(allArticlesBySource)) {
+      sortedArticlesBySource[domain] = [...articles].sort((a, b) => {
+        return getTimeValue(b) - getTimeValue(a);
+      }).slice(0, articlesPerDomain); // Limit to articlesPerDomain
     }
     
-    if (allDomains.value.length === 0 && domains?.length === 0) {
+    articlesBySource.value = sortedArticlesBySource;
+    
+    // Get domains and sort them by most recent article
+    const domainsList = Object.keys(sortedArticlesBySource);
+    const sortedDomains = domainsList.sort((a, b) => {
+      const articlesA = sortedArticlesBySource[a] || [];
+      const articlesB = sortedArticlesBySource[b] || [];
+      
+      const mostRecentA = articlesA.length > 0 ? articlesA[0] : null;
+      const mostRecentB = articlesB.length > 0 ? articlesB[0] : null;
+      
+      if (!mostRecentA) return 1;
+      if (!mostRecentB) return -1;
+      
+      const timeA = getTimeValue(mostRecentA);
+      const timeB = getTimeValue(mostRecentB);
+      return timeB - timeA;
+    });
+    
+    allDomains.value = sortedDomains;
+    
+    // Mark all domains as loaded since we loaded all at once
+    allDomains.value.forEach(domain => {
+      loadedDomains.value.add(domain);
+    });
+    
+    if (allDomains.value.length === 0) {
       // No error, but no articles found
       debugInfo.value = { 
         verification: collectionInfo.value,
@@ -426,8 +535,12 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  console.log('Sources page mounted, fetching all domains with their latest articles');
   try {
     await fetchData();
+    console.log(`Loaded ${allDomains.value.length} domains, each with up to ${articlesPerDomain} articles`);
+  } catch (error) {
+    console.error('Error in sources page initialization:', error);
   } finally {
     initialLoading.value = false;
   }
@@ -444,4 +557,16 @@ const formatDomain = (domain) => {
   }
   return formattedDomain;
 };
-</script> 
+</script>
+
+<style scoped>
+.filter-chip-enter-active,
+.filter-chip-leave-active {
+  transition: all 0.3s ease;
+}
+.filter-chip-enter-from,
+.filter-chip-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style> 

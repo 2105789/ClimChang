@@ -5,8 +5,8 @@
         <!-- Logo Section -->
         <div class="flex items-center gap-6">
           <NuxtLink to="/" class="text-xl font-normal text-primary-800 dark:text-primary-400 tracking-wide flex items-center">
-            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1.5 rounded-md mr-3 text-sm">CC</span>
-            <span class="tracking-widest">ClimChang</span>
+            <span class="bg-primary-600 text-white dark:bg-primary-700 p-1.5 rounded-md mr-3 text-sm">🍀</span>
+            <span class="tracking-widest">Climora</span>
           </NuxtLink>
           <nav class="hidden md:block">
             <ul class="flex gap-8">

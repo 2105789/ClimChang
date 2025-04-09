@@ -95,6 +95,9 @@ export const useArticles = () => {
 
   // Helper function to get timestamp from different date formats
   const getTimeValue = (article) => {
+    // If article is null or undefined, return 0 (lowest priority)
+    if (!article) return 0;
+    
     // First try publication_date (since this is the actual publish date)
     if (article.publication_date) {
       if (typeof article.publication_date === 'string') {
@@ -180,8 +183,11 @@ export const useArticles = () => {
         articlesCache.lastFetch = new Date().getTime();
         
         // Pre-compute data for better performance
+        // Sort with newest first using our universal sorting logic
         articles.sort((a, b) => {
-          return getTimeValue(b) - getTimeValue(a);
+          const timeA = getTimeValue(a);
+          const timeB = getTimeValue(b);
+          return timeB - timeA; // newest first
         });
         
         // Pre-compute domains list
@@ -257,9 +263,11 @@ export const useArticles = () => {
           // Sort based on the composite date logic regardless of which field is present
           let sorted = [...articles];
           
-          // Universal sorting logic using our helper function
+          // Ensure articles are sorted with newest first
           sorted.sort((a, b) => {
-            return getTimeValue(b) - getTimeValue(a);
+            const timeA = getTimeValue(a);
+            const timeB = getTimeValue(b);
+            return timeB - timeA; // newest first
           });
           
           // Limit to requested number per source
@@ -291,7 +299,24 @@ export const useArticles = () => {
   const fetchLatestArticles = async (limitPerSource = 6) => {
     try {
       console.log('Starting to fetch latest articles...');
-      return await processArticlesBySource(limitPerSource);
+      const articlesBySource = await processArticlesBySource(limitPerSource);
+      
+      // Double-check that each domain has properly sorted articles (newest first)
+      const sortedResult = {};
+      
+      for (const [domain, articles] of Object.entries(articlesBySource)) {
+        // Ensure articles are sorted newest first using our universal sorting logic
+        const sortedArticles = [...articles].sort((a, b) => {
+          const timeA = getTimeValue(a);
+          const timeB = getTimeValue(b);
+          return timeB - timeA; // newest first
+        });
+        
+        // Limit to requested number per source
+        sortedResult[domain] = sortedArticles.slice(0, limitPerSource);
+      }
+      
+      return sortedResult;
     } catch (error) {
       console.error('Error fetching latest articles:', error);
       return {};
@@ -317,9 +342,11 @@ export const useArticles = () => {
           article.source_domain === domain
         );
         
-        // Sort the results using our universal sorting logic
+        // Sort the results using our universal sorting logic to ensure newest first
         filtered.sort((a, b) => {
-          return getTimeValue(b) - getTimeValue(a);
+          const timeA = getTimeValue(a);
+          const timeB = getTimeValue(b);
+          return timeB - timeA; // newest first
         });
         
         // Store in domain cache
@@ -361,9 +388,11 @@ export const useArticles = () => {
           });
         });
         
-        // Sort the results using our universal sorting logic
+        // Sort the results using our universal sorting logic to ensure newest first
         articles.sort((a, b) => {
-          return getTimeValue(b) - getTimeValue(a);
+          const timeA = getTimeValue(a);
+          const timeB = getTimeValue(b);
+          return timeB - timeA; // newest first
         });
         
         // Update domain in cache
