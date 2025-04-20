@@ -87,6 +87,7 @@
   
   // Define the specific SVG prefix to check against
   const svgDataUrlPrefix = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'";
+  const gifDataUrlPrefix = "data:image/gif;base64,";
   
   // Track image loading errors
   const imageError = ref(false);
@@ -100,7 +101,7 @@
   const showImage = computed(() => {
     const imageUrl = props.article.image_url;
     // Return false if there's an error or if the image URL doesn't exist or is an SVG
-    return !imageError.value && !!imageUrl && !imageUrl.startsWith(svgDataUrlPrefix);
+    return !imageError.value && !!imageUrl && !imageUrl.startsWith(svgDataUrlPrefix) && !imageUrl.startsWith(gifDataUrlPrefix);
   });
   
   const formatDomain = (domain) => {

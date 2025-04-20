@@ -13,16 +13,16 @@
         </NuxtLink>
         
         <header class="mb-6">
-          <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ formatDomain(domain) }}</h1>
-          <p class="text-muted-foreground">
-            <a 
-              :href="sourceUrl" 
-              target="_blank" 
-              class="text-primary-600 dark:text-primary-400 hover:underline"
-            >
-              {{ domain }}
-            </a>
-          </p>
+          <h1 class="text-3xl md:text-4xl font-bold mb-4">
+            {{ formatDomain(domain) }}
+            <span class="text-xl font-normal text-muted-foreground ml-2">
+              (<a 
+                :href="sourceUrl" 
+                target="_blank" 
+                class="text-primary-600 dark:text-primary-400 hover:underline"
+              >{{ domain }}</a>)
+            </span>
+          </h1>
         </header>
       </div>
       
@@ -188,9 +188,19 @@ onMounted(async () => {
 const formatDomain = (domain) => {
   if (!domain) return '';
   
-  // Remove www. if present and the TLD
+  // Remove www. if present
   let formattedDomain = domain.replace(/^www\./, '');
   const parts = formattedDomain.split('.');
+  
+  // Special case handling for common subdomains
+  if (parts.length > 2) {
+    // For domains like blogs.worldbank.org, news.bbc.co.uk, etc.
+    const firstPart = parts[0].toLowerCase();
+    if (['blogs', 'blog', 'news', 'www2', 'ww2', 'climate', 'data'].includes(firstPart)) {
+      return parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+    }
+  }
+  
   if (parts.length > 1) {
     return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
@@ -200,4 +210,4 @@ const formatDomain = (domain) => {
 
 <style scoped>
 /* Add any page-specific styles here */
-</style> 
+</style>

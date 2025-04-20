@@ -150,7 +150,11 @@
             <h2 class="text-2xl font-semibold">
               {{ formatDomain(domain) }}
               <span class="text-sm font-normal text-muted-foreground ml-2">
-                ({{ domain }})
+                (<a 
+                  :href="`https://${domain}`" 
+                  target="_blank" 
+                  class="text-primary-600 dark:text-primary-400 hover:underline"
+                >{{ domain }}</a>)
               </span>
             </h2>
             <NuxtLink 
@@ -549,9 +553,19 @@ onMounted(async () => {
 const formatDomain = (domain) => {
   if (!domain) return '';
   
-  // Remove www. if present and the TLD
+  // Remove www. if present
   let formattedDomain = domain.replace(/^www\./, '');
   const parts = formattedDomain.split('.');
+  
+  // Special case handling for common subdomains
+  if (parts.length > 2) {
+    // For domains like blogs.worldbank.org, news.bbc.co.uk, etc.
+    const firstPart = parts[0].toLowerCase();
+    if (['blogs', 'blog', 'news', 'www2', 'ww2', 'climate', 'data'].includes(firstPart)) {
+      return parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+    }
+  }
+  
   if (parts.length > 1) {
     return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
   }
@@ -569,4 +583,4 @@ const formatDomain = (domain) => {
   opacity: 0;
   transform: translateY(10px);
 }
-</style> 
+</style>
